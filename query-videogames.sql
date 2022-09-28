@@ -96,20 +96,16 @@ WHERE p.name LIKE 'S%';
 
 -- 6- Selezionare categorie e classificazioni PEGI dei videogiochi che hanno 
 -- ricevuto recensioni da 4 e 5 stelle, mostrandole una sola volta (3363)
-SELECT DISTINCT 
-    c.name AS "category_name", 
+SELECT DISTINCT
+    videogames.name AS "videogame_name",
+    c.name AS "category_name",
     pl.name AS "pegi_label_name"
 FROM videogames
-JOIN reviews r
-    ON videogames.id = r.videogame_id
-JOIN category_videogame cv
-    ON videogames.id = cv.videogame_id
-JOIN categories c
-    ON cv.category_id = c.id
-JOIN pegi_label_videogame plv
-    ON videogames.id = plv.videogame_id
-JOIN pegi_labels pl
-    ON plv.pegi_label_id = pl.id
+JOIN category_videogame cv on videogames.id = cv.videogame_id
+JOIN categories c on cv.category_id = c.id
+JOIN pegi_label_videogame plv on videogames.id = plv.videogame_id
+JOIN pegi_labels pl on plv.pegi_label_id = pl.id
+JOIN reviews r on videogames.id = r.videogame_id
 WHERE r.rating BETWEEN 4 AND 5;
 
 -- 5- Selezionare i premi ricevuti da ogni software house 
