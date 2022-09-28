@@ -1,3 +1,165 @@
+-- Query con join
+
+-- 13- Selezionare le categorie dei videogame i quali 
+-- hanno una media recensioni inferiore a 1.5 (10)
+-- TODO
+
+-- 12- Selezionare la software house che ha vinto 
+-- più premi tra il 2015 e il 2016 (software house id : 1)
+SELECT TOP 1 
+    software_houses.id, 
+    software_houses.name
+FROM software_houses
+JOIN videogames v
+    ON software_houses.id = v.software_house_id
+JOIN award_videogame av
+    ON v.id = av.videogame_id
+WHERE av.year BETWEEN 2015 AND 2016
+GROUP BY 
+    software_houses.id, 
+    software_houses.name
+ORDER BY COUNT(av.id) DESC;
+
+-- 11- Selezionare i dati del videogame (id, name, release_date, totale recensioni) 
+-- con più recensioni (videogame id : 398)
+SELECT TOP 1 
+    videogames.id, 
+    name, release_date, 
+    COUNT(r.id) AS "reviews_count"
+FROM videogames
+JOIN reviews r
+    ON videogames.id = r.videogame_id
+GROUP BY 
+    videogames.id, 
+    name, 
+    release_date
+ORDER BY COUNT(r.id) DESC;
+
+-- 10- Selezionare i dati della prima software house che ha rilasciato un gioco, 
+-- assieme ai dati del gioco stesso (software house id : 5)
+SELECT TOP 1 *
+FROM software_houses
+JOIN videogames v
+    ON software_houses.id = v.software_house_id
+ORDER BY v.release_date;
+
+-- 9- Selezionare i giocatori che hanno giocato al gioco più atteso del 2018 in un torneo del 2019 (3306)
+SELECT p.*
+FROM videogames
+JOIN award_videogame av 
+    ON videogames.id = av.videogame_id
+JOIN awards a 
+    ON av.award_id = a.id
+JOIN tournament_videogame tv 
+    ON videogames.id = tv.videogame_id
+JOIN tournaments t 
+    ON tv.tournament_id = t.id
+JOIN player_tournament pt 
+    ON t.id = pt.tournament_id
+JOIN players p 
+    ON pt.player_id = p.id
+WHERE av.year = 2018
+    AND a.name = N'Gioco più atteso'
+    AND t.year = 2019;
+
+-- 8- Selezionare le città in cui è stato giocato il gioco dell'anno del 2018 (36)
+SELECT DISTINCT t.city
+FROM videogames
+JOIN award_videogame av 
+    ON videogames.id = av.videogame_id
+JOIN tournament_videogame tv 
+    ON videogames.id = tv.videogame_id
+JOIN tournaments t 
+    ON tv.tournament_id = t.id
+WHERE av.year = 2018;
+
+-- 7- Selezionare quali giochi erano presenti nei tornei 
+-- nei quali hanno partecipato i giocatori il cui nome inizia per 'S' (474)
+SELECT DISTINCT videogames.name
+FROM videogames
+JOIN tournament_videogame tv
+    ON videogames.id = tv.videogame_id
+JOIN player_tournament pt
+    ON tv.tournament_id = pt.tournament_id
+JOIN players p
+    ON pt.player_id = p.id
+WHERE p.name LIKE 'S%';
+
+-- 6- Selezionare categorie e classificazioni PEGI dei videogiochi che hanno 
+-- ricevuto recensioni da 4 e 5 stelle, mostrandole una sola volta (3363)
+SELECT DISTINCT 
+    c.name AS "category_name", 
+    pl.name AS "pegi_label_name"
+FROM videogames
+JOIN reviews r
+    ON videogames.id = r.videogame_id
+JOIN category_videogame cv
+    ON videogames.id = cv.videogame_id
+JOIN categories c
+    ON cv.category_id = c.id
+JOIN pegi_label_videogame plv
+    ON videogames.id = plv.videogame_id
+JOIN pegi_labels pl
+    ON plv.pegi_label_id = pl.id
+WHERE r.rating BETWEEN 4 AND 5;
+
+-- 5- Selezionare i premi ricevuti da ogni software house 
+-- per i videogiochi che ha prodotto (55)
+SELECT 
+    awards.name, 
+    sh.name, 
+    v.name
+FROM awards
+JOIN award_videogame av
+    ON awards.id = av.award_id
+JOIN videogames v 
+    ON av.videogame_id = v.id
+JOIN software_houses sh 
+    ON v.software_house_id = sh.id
+GROUP BY 
+    sh.name, 
+    awards.name, 
+    v.name;
+
+-- 4- Selezionare i dati di tutte le software house che hanno 
+-- rilasciato almeno un gioco dopo il 2020, mostrandoli una sola volta (6)
+SELECT DISTINCT software_houses.*
+FROM software_houses
+JOIN videogames v 
+    ON software_houses.id = v.software_house_id
+WHERE YEAR(v.release_date) > 2020;
+
+-- 3- Mostrare le categorie di ogni videogioco (1718)
+SELECT 
+    videogames.id, 
+    videogames.name, 
+    category.id, 
+    category.name
+FROM videogames
+JOIN category_videogame cv 
+    ON videogames.id = cv.videogame_id
+JOIN categories category 
+    ON cv.category_id = category.id;
+
+-- 2- Sezionare tutti i videogame dei tornei tenuti nel 2016, 
+-- mostrandoli una sola volta (226)
+SELECT DISTINCT 
+    videogames.id, 
+    videogames.name
+FROM videogames
+JOIN tournament_videogame tv 
+    ON videogames.id = tv.videogame_id
+JOIN tournaments t 
+    ON tv.tournament_id = t.id
+WHERE t.year = 2016;
+
+-- 1- Selezionare i dati di tutti giocatori che hanno scritto 
+-- almeno una recensione, mostrandoli una sola volta (996)
+SELECT DISTINCT players.*
+FROM players
+JOIN reviews r
+    ON players.id = r.player_id;
+
 -- Query con group by
 
 -- 6- Ordinare i videogame in base alla media 
