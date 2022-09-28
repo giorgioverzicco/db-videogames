@@ -1,3 +1,53 @@
+-- 6- Selezionare tutti gli id dei voli che hanno almeno un 
+-- passeggero il cui cognome inizia con 'L' (966)
+SELECT DISTINCT f.id
+FROM flights f
+JOIN flight_passenger fp on f.id = fp.flight_id
+JOIN passengers p on fp.passenger_id = p.id
+WHERE p.lastname LIKE 'L%';
+
+-- 5- Selezionare tutti i voli che partono da 'Charleneland' e arrivano a 'Mauricestad' (3)
+SELECT *
+FROM flights f 
+JOIN airports ad on f.departure_airport_id = ad.id
+JOIN airports aa on f.arrival_airport_id = aa.id
+WHERE ad.city = 'Charleneland'
+    and aa.city = 'Mauricestad';
+
+-- 4- Selezionare tutti i voli con i relativi passeggeri (65296)
+SELECT *
+FROM flights f
+JOIN flight_passenger fp
+    ON f.id = fp.flight_id
+JOIN passengers p
+    ON fp.passenger_id = p.id;
+
+-- 3- Selezionare tutti i passeggeri che hanno usato come documento 'Passport'(775)
+SELECT DISTINCT p.*
+FROM passengers p 
+JOIN document_type_passenger dtp
+    ON p.id = dtp.passenger_id
+JOIN document_types dt
+    ON dtp.document_type_id = dt.id
+WHERE dt.name = 'Passport';
+
+-- 2- Selezionare i voli presi da 'Shirley Stokes' (61)
+SELECT f.*
+FROM flights f 
+JOIN flight_passenger fp on f.id = fp.flight_id
+JOIN passengers p on fp.passenger_id = p.id
+WHERE p.name = 'Shirley'
+    AND p.lastname = 'Stokes';
+
+-- 1- Selezionare tutti i passeggeri del volo 70021493-2 (85)
+SELECT p.*
+FROM passengers p
+JOIN flight_passenger fp 
+    ON p.id = fp.passenger_id
+JOIN flights f 
+    ON fp.flight_id = f.id
+WHERE f.number = '70021493-2';
+
 -- Query con group by
 
 -- 9- Selezionare gli impiegati che non hanno mai cambiato compagnia aerea per cui lavorano (1061)
