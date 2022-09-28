@@ -2,7 +2,16 @@
 
 -- 13- Selezionare le categorie dei videogame i quali 
 -- hanno una media recensioni inferiore a 1.5 (10)
--- TODO
+SELECT DISTINCT c.name AS "category_name"
+FROM videogames
+JOIN reviews r
+    ON videogames.id = r.videogame_id
+JOIN category_videogame cv 
+    ON videogames.id = cv.videogame_id
+JOIN categories c 
+    ON cv.category_id = c.id
+GROUP BY r.id, c.name
+HAVING AVG(r.rating) < 1.5;
 
 -- 12- Selezionare la software house che ha vinto 
 -- più premi tra il 2015 e il 2016 (software house id : 1)
