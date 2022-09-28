@@ -12,11 +12,10 @@ ORDER BY AVG(rating);
 -- 5- Contare quanti videogiochi sono disponbiili 
 -- per ciascun device (del device vogliamo solo l'ID) (7)
 SELECT
-    dv.device_id,
+    device_id,
     COUNT(*) AS "videogames_count"
-FROM videogames
-JOIN device_videogame dv on videogames.id = dv.videogame_id
-GROUP BY dv.device_id;
+FROM device_videogame
+GROUP BY device_id;
 
 -- 4- Mostrare il numero di videogiochi rilasciati ogni anno (11)
 SELECT 
@@ -28,11 +27,10 @@ GROUP BY YEAR(release_date);
 -- 3- Contare quanti videogiochi hanno ciascuna 
 -- classificazione PEGI (della classificazione PEGI vogliamo solo l'ID) (13)
 SELECT 
-    plv.pegi_label_id,
-    COUNT(*) AS "videogames_count"
-FROM videogames
-JOIN pegi_label_videogame plv on videogames.id = plv.videogame_id
-GROUP BY plv.pegi_label_id;
+    pegi_label_id,
+    COUNT(*) as "videogames_count"
+FROM pegi_label_videogame
+GROUP BY pegi_label_id;
 
 -- 2- Contare quante recensioni ha ricevuto 
 -- ogni videogioco (del videogioco vogliamo solo l'ID) (500)
@@ -66,11 +64,9 @@ WHERE videogame_id = 412;
 
 -- 10- Selezionare gli id dei videogame che hanno ricevuto almeno una recensione da stelle, 
 -- mostrandoli una sola volta (443)
-SELECT DISTINCT videogames.id
-FROM videogames
-JOIN reviews review 
-    ON videogames.id = review.videogame_id
-WHERE review.rating = 5;
+SELECT DISTINCT videogame_id
+FROM reviews
+WHERE rating = 5;
 
 -- 9- Selezionare tutti i dati dei videogiochi rilasciati nell'anno 2020 (46)
 SELECT *
@@ -84,12 +80,10 @@ WHERE rating BETWEEN 2 AND 4;
 
 -- 7- Selezionare tutti i videogame che hanno la categoria 2 (FPS) o 6 (RPG),
 -- mostrandoli una sola volta (del videogioco vogliamo solo l'ID) (287)
-SELECT DISTINCT videogames.id
-FROM videogames
-JOIN category_videogame cv 
-    ON videogames.id = cv.videogame_id
-WHERE cv.category_id = 2 
-   OR cv.category_id = 6;
+SELECT DISTINCT videogame_id
+FROM category_videogame
+WHERE category_id = 2
+    OR category_id = 6;
 
 -- 6- Selezionare tutti i premi che contengono nella descrizione la parola 'facere' (2)
 SELECT *
