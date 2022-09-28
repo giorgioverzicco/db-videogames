@@ -1,3 +1,76 @@
+-- Query con group by
+
+-- 9- Selezionare gli impiegati che non hanno mai cambiato compagnia aerea per cui lavorano (1061)
+SELECT *
+FROM airline_employee
+WHERE layoff_date IS NULL;
+-- FIXME
+
+-- 8- Contare quante manutenzioni ha ricevuto ciascun 
+-- aereo nel 2021 (dell'aereo vogliamo solo l'ID) (36)
+SELECT
+    airplane_id,
+    COUNT(*) AS "maintenance_works_count"
+FROM maintenance_works
+WHERE YEAR(datetime) = 2021
+GROUP BY airplane_id;
+
+-- 7- Per ogni manufacturer, trovare l'aereo con maggior numero di posti a sedere (8)
+SELECT 
+    manufacturer, 
+    MAX(seating_capacity) AS "max_seating_capacity"
+FROM airplanes
+GROUP BY manufacturer
+ORDER BY MAX(seating_capacity) DESC;
+
+-- 6- Contare quanti voli ci sono stati ogni anno (tenendo conto della data di partenza) (11)
+SELECT
+    YEAR(departure_datetime) AS "departure_year",
+    COUNT(*) AS "flights_count"
+FROM flights
+GROUP BY YEAR(departure_datetime);
+
+-- 5- Contare quanti passeggeri sono nati nello stesso anno (61)
+SELECT 
+    YEAR(date_of_birth) AS "year_of_birth", 
+    COUNT(*) AS "passengers_count"
+FROM passengers
+GROUP BY YEAR(date_of_birth);
+
+-- 4- Ordinare gli aerei per numero di manutenzioni ricevute 
+-- (da quello che ne ha di piu'; dell'aereo vogliamo solo l'ID) (100)
+SELECT 
+    airplane_id, 
+    COUNT(*) AS "maintenance_works_count"
+FROM maintenance_works
+GROUP BY airplane_id
+ORDER BY COUNT(*) DESC;
+
+-- 3- Contare per ogni volo il numero di passeggeri (del volo vogliamo solo l'ID) (1000)
+SELECT 
+    COUNT(*) as "passengers_count",
+    passenger_id
+FROM flight_passenger
+GROUP BY passenger_id;
+
+
+-- 2- Contare quante volte ogni impiegato ha lasciato una compagnia aerea 
+-- (non mostrare quelli che non hanno mai lasciato; dell'impiegato vogliamo solo l'ID) (8939)
+SELECT 
+    COUNT(*) AS "employees_count",
+    employee_id
+FROM airline_employee
+WHERE layoff_date IS NOT NULL
+GROUP BY employee_id;
+
+-- 1- Contare quanti lavori di manutenzione ha eseguito ogni 
+-- impiegato (dell'impiegato vogliamo solo l'ID) (1136)
+SELECT 
+    COUNT(*) AS "maintenance_works_count",
+    employee_id
+FROM employee_maintenance_work
+GROUP BY employee_id;
+
 -- Query su singola tabella
 
 -- 12- Contare quanti voli sono partiti il 4 luglio 2019 (3)
